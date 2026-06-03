@@ -1,49 +1,15 @@
-import streamlit as st
-import matplotlib.pyplot as plt
+# 在 app.py 开头添加
 import matplotlib
-import os
+matplotlib.use('Agg')  # 使用非交互式后端
 
-# === 中文显示解决方案（无需上传字体文件）===
-# 方法：使用支持 Unicode 的英文字体 + 正确的编码设置
-
-# 设置 matplotlib 使用支持 Unicode 的字体
-matplotlib.rcParams['font.family'] = 'DejaVu Sans'  # Streamlit Cloud 默认有这个字体
-matplotlib.rcParams['axes.unicode_minus'] = False   # 解决负号显示问题
-
-# 如果 DejaVu Sans 效果不好，可以尝试以下备选方案：
-# matplotlib.rcParams['font.family'] = ['sans-serif']
-# matplotlib.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'DejaVu Sans', 'Liberation Sans']
-
-st.title("SPC 控制图分析工具")
-
-# === 测试中文显示 ===
-import numpy as np
-
-# 创建示例数据
-x = np.arange(1, 12)
-y = np.random.normal(5, 0.5, 11)
-
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, y, 'bo-', linewidth=2, markersize=6)
-ax.set_title('I-MR 控制图示例', fontsize=14, pad=20)
-ax.set_xlabel('样本编号', fontsize=12)
-ax.set_ylabel('测量值', fontsize=12)
-ax.grid(True, alpha=0.3)
-
-# 添加中文注释
-ax.text(0.02, 0.98, '均值 = {:.2f}'.format(np.mean(y)), 
-        transform=ax.transAxes, verticalalignment='top',
-        bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
-
-st.pyplot(fig)
-
-# === 调试信息（可选）===
-st.write("当前 matplotlib 字体配置:")
-st.write(f"font.family: {matplotlib.rcParams['font.family']}")
-st.write(f"可用字体（前5个）:")
-import matplotlib.font_manager as fm
-fonts = [f.name for f in fm.fontManager.ttflist[:5]]
-st.write(fonts)
+# 强制使用支持 Unicode 的字体组合
+matplotlib.rcParams.update({
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['DejaVu Sans', 'Arial Unicode MS', 'Liberation Sans', 'Noto Sans'],
+    'axes.unicode_minus': False,
+    'figure.dpi': 100,
+    'savefig.dpi': 100
+})
 import streamlit as st
 import pandas as pd
 import numpy as np
