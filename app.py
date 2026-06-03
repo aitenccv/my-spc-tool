@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['Noto Sans CJK SC', 'WenQuanYi Micro Hei', 'SimHei', 'sans-serif']
+plt.rcParams['axes.unicode_minus'] = False
 from io import StringIO, BytesIO
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
