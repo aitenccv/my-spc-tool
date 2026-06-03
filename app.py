@@ -224,7 +224,7 @@ if raw_text.strip():
             except: continue
         if df is None or df.shape[1] <= 1:
             st.error("❌ 无法解析，请确认含表头且为表格格式")
-        否则:
+        else:
             for col in df.columns[1:]:
                 df[col] = pd.to_numeric(df[col].astype(str).str.replace('%','').str.strip(), errors='coerce')
             st.success(f"✅ 解析成功: {df.shape[0]}行 × {df.shape[1]}列")
@@ -238,31 +238,31 @@ if df is not None and df.shape[1] > 1:
     
     c1, c2 = st.columns(2)
     with c1: value_col = st.selectbox("选择分析指标（数值列）", numeric_cols)
-    与c2：
+    with c2: 
         subgroup_col = st.selectbox("选择子组标识列（可选）", 
                                      options=["(不使用子组 → I-MR图)"] + [c for c in all_cols if c != value_col])
         subgroup_col = None if "(不使用" in subgroup_col else subgroup_col
     
-    如果点击按钮(" 生成控制图与报告", type="primary"):
+    if st.button("🚀 生成控制图与报告", type="primary"):
         spc = PharmaSPC(df=df, value_col=value_col, subgroup_col=subgroup_col)
         fig = spc.plot()
         st.pyplot(fig)
         
         mc1, mc2, mc3, mc4, mc5 = st.columns(5)
         mc1.metric("图表类型", spc.chart_type)
-mc2.度量("CL", f"{空格。x_bar:.3f}")
-mc3.度量("UCL", f"{空间.ucl_x:.3f}")
-mc4.度量("LCL", f"{空格。lcl_x:.3f}")
-mc5.度量("⚠️ 异常点数", f"{len(spc.违规次数)}", 递增颜色="反向")
+        mc2.metric("CL", f"{spc.x_bar:.3f}")
+        mc3.metric("UCL", f"{spc.ucl_x:.3f}")
+        mc4.metric("LCL", f"{spc.lcl_x:.3f}")
+        mc5.metric("⚠️ 异常点数", f"{len(spc.violations)}", delta_color="inverse")
         
         # 网页端展示异常清单
-        如果 长度(spc.违规) > 0:
-st.警告(f"⚠️ 检测到{长度(spc.违规)}个异常点（超出控制限）：")
+        if len(spc.violations) > 0:
+            st.warning(f"⚠️ 检测到 {len(spc.violations)} 个异常点（超出控制限）：")
             st.dataframe(pd.DataFrame(spc.violations), use_container_width=True, hide_index=True)
-        否则:
+        else:
             st.success("✅ 未检测到超出控制限的异常点")
         
-圣.子标题(“3️⃣ 导出报告”)
+        st.subheader("3️⃣ 导出报告")
         report_buf = generate_word_report(spc, fig, df)
         fname = f"SPC_{spc.chart_type}_{value_col}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.docx"
         st.download_button("📥 下载 Word 分析报告（含异常标注）", report_buf, fname,
