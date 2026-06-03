@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import matplotlib.font_manager as fm
 import os, urllib.request
 from io import StringIO, BytesIO
@@ -20,7 +21,7 @@ FONT_PATH = os.path.join(FONT_DIR, "NotoSansSC-Regular.otf")
 def setup_chinese_font():
     """确保中文字体可用，缺失时自动下载"""
     # 清除 matplotlib 字体缓存，使其重新扫描系统字体（packages.txt 安装的）
-    cache_dir = plt.get_cachedir()
+    cache_dir = mpl.get_cachedir()
     for f in os.listdir(cache_dir):
         if f.startswith("fontlist"):
             os.remove(os.path.join(cache_dir, f))
