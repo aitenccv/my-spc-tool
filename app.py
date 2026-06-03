@@ -1,40 +1,4 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
-import os
-
-# === 动态加载自定义字体 ===
-# 假设字体文件和 app.py 在同一目录
-font_path = "NotoSansCJKsc-Regular.otf"
-
-# 如果你把字体放在 fonts/ 文件夹里，用这行：
-# font_path = "fonts/NotoSansCJKsc-Regular.otf"
-
-if os.path.exists(font_path):
-    # 添加字体到 Matplotlib 的字体管理器
-    font_prop = fm.FontProperties(fname=font_path)
-    # 设置全局字体
-    plt.rcParams['font.family'] = font_prop.get_name()
-    plt.rcParams['axes.unicode_minus'] = False
-    st.write("✅ 字体加载成功！")  # 部署后可删除这行
-else:
-    st.error(f"❌ 字体文件未找到: {font_path}")
-    st.stop()  # 停止执行，方便调试
-
-# === 你的其他导入和代码 ===
-import numpy as np
-import pandas as pd
-# ... 其他代码
-
-# 绘图示例
-st.title("SPC 控制图")
-fig, ax = plt.subplots()
-ax.plot([1,2,3], [4,5,6])
-ax.set_title("中文标题测试")
-ax.set_xlabel("X轴标签")
-ax.set_ylabel("Y轴标签")
-st.pyplot(fig)
-import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
