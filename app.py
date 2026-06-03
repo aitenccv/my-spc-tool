@@ -1,3 +1,15 @@
+# 在 app.py 开头添加
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
+
+# 强制使用支持 Unicode 的字体组合
+matplotlib.rcParams.update({
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['DejaVu Sans', 'Arial Unicode MS', 'Liberation Sans', 'Noto Sans'],
+    'axes.unicode_minus': False,
+    'figure.dpi': 100,
+    'savefig.dpi': 100
+})
 import streamlit as st
 import pandas as pd
 import numpy as np
