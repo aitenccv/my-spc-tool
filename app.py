@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 import matplotlib.font_manager as fm
-import os, urllib.request
+import os
 from io import StringIO, BytesIO
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -14,34 +13,11 @@ import datetime
 st.set_page_config(page_title="制药SPC智能分析平台", layout="wide")
 
 # ================= 中文字体适配 =================
-FONT_URL = "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansSC-Regular.otf"
-FONT_DIR = os.path.join(os.path.expanduser("~"), ".streamlit", "fonts")
-FONT_PATH = os.path.join(FONT_DIR, "NotoSansSC-Regular.otf")
-
 def setup_chinese_font():
-    """确保中文字体可用，缺失时自动下载"""
-    # 清除 matplotlib 字体缓存，使其重新扫描系统字体（packages.txt 安装的）
-    cache_dir = mpl.get_cachedir()
-    for f in os.listdir(cache_dir):
-        if f.startswith("fontlist"):
-            os.remove(os.path.join(cache_dir, f))
-    fm.fontManager.__init__()
-
-    # 优先尝试系统已有字体
-    for name in ['WenQuanYi Micro Hei', 'SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'Noto Sans CJK SC']:
-        if any(name in f.name for f in fm.fontManager.ttflist):
-            plt.rcParams['font.sans-serif'] = [name] + plt.rcParams['font.sans-serif']
-            plt.rcParams['axes.unicode_minus'] = False
-            return
-
-    # 系统无中文字体，下载 NotoSansSC
-    if not os.path.exists(FONT_PATH):
-        os.makedirs(FONT_DIR, exist_ok=True)
-        with st.spinner("首次运行：下载中文字体（约 7MB）..."):
-            urllib.request.urlretrieve(FONT_URL, FONT_PATH)
-
-    fm.fontManager.addfont(FONT_PATH)
-    prop = fm.FontProperties(fname=FONT_PATH)
+    """直接加载仓库内字体文件，确保中文正常显示"""
+    font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "NotoSansCJKsc-Regular.otf")
+    fm.fontManager.addfont(font_path)
+    prop = fm.FontProperties(fname=font_path)
     plt.rcParams['font.sans-serif'] = [prop.get_name()] + plt.rcParams['font.sans-serif']
     plt.rcParams['axes.unicode_minus'] = False
 
